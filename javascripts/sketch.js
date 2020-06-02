@@ -1,18 +1,26 @@
+"use strict";
+
+let SIMULATION;
+
 function setup() {
-  var width = document.getElementById("canvas").offsetWidth;
-  var height = document.getElementById("canvas").offsetHeight;
-  var customCanvas = createCanvas(width, height);
+  let width = document.getElementById("canvas").offsetWidth;
+  let height = document.getElementById("canvas").offsetHeight;
+  let customCanvas = createCanvas(width, height);
   customCanvas.parent("canvas");
   windowResized();
+
+  outputMessage("Bem-vindo ao iPEF, o software de análise de estruturas 2D para PEF3208");
+
+  SIMULATION = new Simulation();
+  SIMULATION.addObject(new Line2D(100, 100, 200, 200));
 }
 
 function draw() {
-  line(100,100, 200,200);
-  stroke("#c1c1c1");
+  SIMULATION.draw();
 }
 
 function windowResized() {
-  var width = document.getElementById("canvas").offsetWidth;
-  var height = document.getElementById("canvas").offsetHeight;
+  let width = document.getElementById("canvas").offsetWidth;
+  let height = document.getElementById("canvas").offsetHeight;
   resizeCanvas(width, height);
 }
