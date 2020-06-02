@@ -7,6 +7,7 @@ function setup() {
   let height = document.getElementById("canvas").offsetHeight;
   let customCanvas = createCanvas(width, height);
   customCanvas.parent("canvas");
+  customCanvas.mouseClicked(clickCanvas);
   windowResized();
 
   outputMessage("Bem-vindo ao iPEF, o software de análise de estruturas 2D para PEF3208");
@@ -16,6 +17,7 @@ function setup() {
 }
 
 function draw() {
+  clear()
   SIMULATION.draw();
 }
 

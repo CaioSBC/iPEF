@@ -10,6 +10,7 @@ class Line2D {
 
     draw() {
         stroke("#c1c1c1");
+        strokeWeight(3);
         line(this.startX, this.startY, this.endX, this.endY);
     }
 }

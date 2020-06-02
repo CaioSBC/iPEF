@@ -20,6 +20,16 @@ button.calculate {
     font-size: large;
 }
 
+button.utilities {
+    width: 100%;
+    height: 30px;
+    margin: 0;
+    border: 0;
+    background-color: #222222;
+    color: #c1c1c1;
+    font-size: large;
+}
+
 #main {
     height: 100%;
     width: 100%;
@@ -31,7 +41,7 @@ button.calculate {
     top: 0;
     bottom: 30px;
     left: 0;
-    right: 150px;
+    width: 150px;
     background-color: #222222;
 }
 
@@ -56,6 +66,17 @@ button.calculate {
     background-color: #363636;
     color: #c1c1c1;
     font-size: large;
+}
+
+#title-div {
+    width: 100%;
+    height: 50px;
+    margin: 0;
+    margin-bottom: 50px;
+    border: 0;
+    color: #c1c1c1;
+    text-align: center;
+    font-size: 50px;
 }
 
 #calculate-div {
