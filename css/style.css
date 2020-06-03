@@ -30,6 +30,18 @@ button.utilities {
     font-size: large;
 }
 
+button.draw-modes {
+    width: 100%;
+    height: 20px;
+    margin: 0;
+    border: 0;
+    background-color: #222222;
+    color: #c1c1c1;
+    font-size: normal;
+    text-align: right;
+    visibility: hidden;
+}
+
 #main {
     height: 100%;
     width: 100%;

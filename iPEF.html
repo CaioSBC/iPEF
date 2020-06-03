@@ -13,6 +13,7 @@
   <script src="javascripts/objects.js"></script>
   <script src="javascripts/simulation.js"></script>
   <script src="javascripts/utilities.js"></script>
+  <script src="javascripts/interaction.js"></script>
 </head>
 
 <body>
@@ -20,6 +21,8 @@
     <div id="utilities">
       <div id="title-div">iPEF</div>
       <button type="button" class="utilities" onclick="setDrawLine()">Desenhar Linha</button>
+      <button type="button" class="draw-modes" onclick="setDrawLine('free')">Desenho Livre</button>
+      <button type="button" class="draw-modes" onclick="setDrawLine('continuous')">Desenho Contínuo</button>
     </div>
     <div id="canvas"></div>
     <div id="output"></div>

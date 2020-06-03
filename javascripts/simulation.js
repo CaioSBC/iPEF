@@ -7,13 +7,23 @@ class Simulation {
     }
 
     addObject(object) {
-        this.objects.push(object);
+        if (object) {
+            this.objects.push(object);
+        }
     }
 
     setPseudoObject() {
         switch (UTILITY_MODE) {
-            case "drawLine":
-                let lastLine;
+            case "drawLine free":
+                if (ClickManager.drawingLine) {
+                    let startX = ClickManager.currentX;
+                    let startY = ClickManager.currentY;
+                    this.pseudoObject = new Line2D(startX, startY, mouseX, mouseY);
+                }
+                break;
+
+            case "drawLine continuous":
+                let lastLine = null;
 
                 let i = this.objects.length - 1;
                 while (i >= 0) {
@@ -24,10 +34,21 @@ class Simulation {
 
                 }
 
-                let startX = lastLine.endX;
-                let startY = lastLine.endY;
-                this.pseudoObject = new Line2D(startX, startY, mouseX, mouseY);
+                if (lastLine) {
+                    let startX = lastLine.endX;
+                    let startY = lastLine.endY;
+                    this.pseudoObject = new Line2D(startX, startY, mouseX, mouseY);
+                } else {
+                    if (ClickManager.currentX && ClickManager.currentY) {
+                        let startX = ClickManager.currentX;
+                        let startY = ClickManager.currentY;
+                        this.pseudoObject = new Line2D(startX, startY, mouseX, mouseY);
+                    } else {
+                        this.pseudoObject = null;
+                    }
+                }
                 break;
+
             default:
                 this.pseudoObject = null;
         }
@@ -38,11 +59,11 @@ class Simulation {
             for (let object of this.objects) {
                 object.draw();
             }
+        }
 
-            this.setPseudoObject();
-            if (this.pseudoObject) {
-                this.pseudoObject.draw();
-            }
+        this.setPseudoObject();
+        if (this.pseudoObject) {
+            this.pseudoObject.draw();
         }
     }
 }
