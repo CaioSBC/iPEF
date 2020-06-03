@@ -102,3 +102,17 @@ button.draw-modes {
     border: 0;
     background-color: #222222;
 }
+
+#position {
+    position: fixed;
+    box-sizing: border-box;
+    bottom: 60px;
+    width: 150px;
+    height: 30px;
+    margin: 0;
+    border: 0;
+    background-color: #222222;
+    color: #c1c1c1;
+    font-size: x-large;
+    text-align: center;
+}

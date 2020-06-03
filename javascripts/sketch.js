@@ -18,6 +18,7 @@ function setup() {
 function draw() {
   clear()
   SIMULATION.draw();
+  updatePosition(mouseX, mouseY);
 }
 
 function windowResized() {
