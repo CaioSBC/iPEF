@@ -39,12 +39,3 @@ function setDrawLine(mode) {
             SIMULATION.pseudoObject = null;
     }
 }
-
-function clickCanvas() {
-    switch (UTILITY_MODE) {
-        case "drawLine continuous":
-            SIMULATION.addObject(SIMULATION.pseudoObject);
-            break;
-        default:
-    }
-}
