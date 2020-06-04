@@ -64,7 +64,7 @@ class ClickManager {
         switch (UTILITY_MODE) {
             case "drawLine free":
                 if (ClickManager.drawingLine) {
-                    SIMULATION.addObject(SIMULATION.pseudoObject);
+                    iPEF.simulation.addObject(iPEF.simulation.pseudoObject);
                     ClickManager.drawingLine = false;
                 } else {
                     ClickManager.drawingLine = true;
@@ -72,7 +72,7 @@ class ClickManager {
                 break;
 
             case "drawLine continuous":
-                SIMULATION.addObject(SIMULATION.pseudoObject);
+                iPEF.simulation.addObject(iPEF.simulation.pseudoObject);
                 break;
             default:
         }

@@ -12,7 +12,7 @@ function setDrawLine(mode) {
                 UTILITY_MODE = "drawLine free";
             }
 
-            SIMULATION.pseudoObject = null;
+            iPEF.simulation.pseudoObject = null;
             break;
         case "continuous":
             if (UTILITY_MODE == "drawLine continuous") {
@@ -21,7 +21,7 @@ function setDrawLine(mode) {
                 UTILITY_MODE = "drawLine continuous";
             }
 
-            SIMULATION.pseudoObject = null;
+            iPEF.simulation.pseudoObject = null;
             break;
         default:
             if (UTILITY_MODE == "drawLine free" || UTILITY_MODE == "drawLine continuous") {
@@ -36,6 +36,6 @@ function setDrawLine(mode) {
                 }
             }
 
-            SIMULATION.pseudoObject = null;
+            iPEF.simulation.pseudoObject = null;
     }
 }
