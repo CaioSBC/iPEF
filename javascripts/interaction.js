@@ -1,61 +1,23 @@
 "use strict";
 
-class ClickManager {
-    static _lastX = null;
-    static _lastY = null;
-    static _currentX = null;
-    static _currentY = null;
-    static _drawingLine = false;
+let mouseData = {
+    lastX : null,
+    lastY : null,
+    currentX : null,
+    currentY : null,
+    drawingLine : false
+}
 
+class ClickManager {
     constructor() {
         throw new Error("Can't instantiate abstract class!");
     }
 
-    get lastX() {
-        return this._lastX;
-    }
-
-    set lastX(value) {
-        this._lastX = value;
-    }
-
-    get lastY() {
-        return this._lastY;
-    }
-
-    set lastY(value) {
-        this._lastY = value;
-    }
-
-    get currentX() {
-        return this._currentX;
-    }
-
-    set currentX(value) {
-        this._currentX = value;
-    }
-
-    get currentY() {
-        return this._currentY;
-    }
-
-    set currentY(value) {
-        this._currentY = value;
-    }
-
-    get drawingLine() {
-        return this._drawingLine;
-    }
-
-    set drawingLine(value) {
-        this._drawingLine = value;
-    }
-
     static update() {
-        ClickManager.lastX = ClickManager.currentX;
-        ClickManager.lastY = ClickManager.currentY;
-        ClickManager.currentX = mouseX;
-        ClickManager.currentY = mouseY;
+        mouseData.lastX = mouseData.currentX;
+        mouseData.lastY = mouseData.currentY;
+        mouseData.currentX = mouseX;
+        mouseData.currentY = mouseY;
     }
 
     static clickCanvas() {
@@ -63,11 +25,11 @@ class ClickManager {
 
         switch (UTILITY_MODE) {
             case "drawLine free":
-                if (ClickManager.drawingLine) {
+                if (mouseData.drawingLine) {
                     iPEF.simulation.addObject(iPEF.simulation.pseudoObject);
-                    ClickManager.drawingLine = false;
+                    mouseData.drawingLine = false;
                 } else {
-                    ClickManager.drawingLine = true;
+                    mouseData.drawingLine = true;
                 }
                 break;
 

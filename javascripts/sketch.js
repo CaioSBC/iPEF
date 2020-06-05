@@ -8,7 +8,7 @@ let iPEF = {
   distFixLoad : 10,
   distFixLoad2 : 40,
   table : [],
-  simulation : null
+  simulation : new Simulation()
 }
 
 function setup() {
@@ -23,7 +23,7 @@ function setup() {
 
   iPEF.xOrigin = Math.round(width/2);
   iPEF.yOrigin = Math.round(height/2);
-  iPEF.simulation = new Simulation();
+  CSVReader.updateTables();
 }
 
 function draw() {

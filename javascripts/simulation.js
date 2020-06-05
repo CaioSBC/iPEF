@@ -4,7 +4,6 @@ class Simulation {
     constructor() {
         this._objects = [];
         this._pseudoObject = null;
-        CSVReader.updateTables();
     }
 
     get pseudoObject() {
@@ -24,9 +23,9 @@ class Simulation {
     autoSetPseudoObject() {
         switch (UTILITY_MODE) {
             case "drawLine free":
-                if (ClickManager.drawingLine) {
-                    let startX = ClickManager.currentX;
-                    let startY = ClickManager.currentY;
+                if (mouseData.drawingLine) {
+                    let startX = mouseData.currentX;
+                    let startY = mouseData.currentY;
                     this._pseudoObject = new Line2D(startX, startY, mouseX, mouseY);
                 }
                 break;
@@ -48,9 +47,9 @@ class Simulation {
                     let startY = lastLine.endY;
                     this._pseudoObject = new Line2D(startX, startY, mouseX, mouseY);
                 } else {
-                    if (ClickManager.currentX && ClickManager.currentY) {
-                        let startX = ClickManager.currentX;
-                        let startY = ClickManager.currentY;
+                    if (mouseData.currentX && mouseData.currentY) {
+                        let startX = mouseData.currentX;
+                        let startY = mouseData.currentY;
                         this._pseudoObject = new Line2D(startX, startY, mouseX, mouseY);
                     } else {
                         this._pseudoObject = null;
