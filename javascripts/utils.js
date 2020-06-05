@@ -27,10 +27,10 @@ function customToBaseDistX(distanceX, context) {
     }
 }
 
-function customToBaseDistX(distanceX, context) {
+function customToBaseDistY(distanceY, context) {
     switch (context) {
         case "force":
-            return (-1) * (distanceX * iPEF.distFixForce);
+            return (-1) * (distanceY * iPEF.distFixForce);
         case "load":
             return (-1) * (distanceY * iPEF.distFixLoad);
         default:
