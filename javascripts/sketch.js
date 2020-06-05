@@ -11,14 +11,6 @@ let iPEF = {
   simulation : null
 }
 
-function preload() {
-  iPEF.table[0] = loadTable('javascripts/pontos.csv', 'csv', 'header');
-  iPEF.table[1] = loadTable('javascripts/linhas.csv','csv','header');
-  iPEF.table[2] = loadTable('javascripts/forcas.csv','csv','header');
-  iPEF.table[3] = loadTable('javascripts/apoios.csv','csv','header');
-  iPEF.table[4] = loadTable('javascripts/cargas.csv','csv','header');
-}
-
 function setup() {
   let width = document.getElementById("canvas").offsetWidth;
   let height = document.getElementById("canvas").offsetHeight;
@@ -32,10 +24,6 @@ function setup() {
   iPEF.xOrigin = Math.round(width/2);
   iPEF.yOrigin = Math.round(height/2);
   iPEF.simulation = new Simulation();
-  //debug
-  iPEF.simulation.addObject(new Force2D(500, 30, 200, 100));
-  iPEF.simulation.addObject(new FixedSupport(1000, 750, "direita"));
-  iPEF.simulation.addObject(new Load2D(0,60,100,300,200,300));
 }
 
 function draw() {

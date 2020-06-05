@@ -8,6 +8,36 @@ function updatePosition(posX, posY) {
     document.getElementById("position").innerHTML = "X: " + posX + "</br>" + "Y: " + posY;
 }
 
+function customToBaseX(customX) {
+    return iPEF.xOrigin + (customX * iPEF.distFix);
+}
+
+function customToBaseY(customY) {
+    return iPEF.yOrigin + (customY * iPEF.distFix);
+}
+
+function customToBaseDistX(distanceX, context) {
+    switch (context) {
+        case "force":
+            return (distanceX * iPEF.distFixForce);
+        case "load":
+            return (distanceX * iPEF.distFixLoad);
+        default:
+            throw new Error("Impossible case!");
+    }
+}
+
+function customToBaseDistX(distanceX, context) {
+    switch (context) {
+        case "force":
+            return (-1) * (distanceX * iPEF.distFixForce);
+        case "load":
+            return (-1) * (distanceY * iPEF.distFixLoad);
+        default:
+            throw new Error("Impossible case!");
+    }
+}
+
 function drawArrow(base, vec, myColor) {
     push();
     stroke(myColor);

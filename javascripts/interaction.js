@@ -7,6 +7,10 @@ class ClickManager {
     static _currentY = null;
     static _drawingLine = false;
 
+    constructor() {
+        throw new Error("Can't instantiate abstract class!");
+    }
+
     get lastX() {
         return this._lastX;
     }
@@ -45,10 +49,6 @@ class ClickManager {
 
     set drawingLine(value) {
         this._drawingLine = value;
-    }
-
-    constructor() {
-        throw new Error("Can't instantiate abstract class!");
     }
 
     static update() {

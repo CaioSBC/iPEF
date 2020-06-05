@@ -84,9 +84,6 @@ class Load2D {
         
         while ((this._startX + deltaX) != this._endX || (this._startY + deltaY) != this._endY) {
             let vResult = p5.Vector.sub(vAux2, vAux1);
-            console.log(vAux2);
-            console.log(vAux1);
-            console.log(vResult);
             drawArrow(vAux1, vResult, 'blue');
 
             deltaX = deltaX + fixDeltaX;
@@ -95,6 +92,27 @@ class Load2D {
             vAux1 = createVector((this._startX + deltaX) + this.magnitudeX, (this._startY + deltaY) + this.magnitudeY);
             vAux2 = createVector(this._startX + deltaX, this.startY + deltaY);
        }
+    }
+}
+
+class Point {
+    constructor(x, y) {
+        this._x = x;
+        this._y = y;
+    }
+
+    get x() {
+        return this._x;
+    }
+
+    get y() {
+        return this._y;
+    }
+
+    draw() {
+        stroke("#c1c1c1");
+        strokeWeight(5);
+        point(this._x, this._y);
     }
 }
 

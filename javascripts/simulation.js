@@ -4,6 +4,7 @@ class Simulation {
     constructor() {
         this._objects = [];
         this._pseudoObject = null;
+        CSVReader.updateTables();
     }
 
     get pseudoObject() {
