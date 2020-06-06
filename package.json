@@ -1,0 +1,19 @@
+{
+  "name": "iPEF",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/C4i0kun/iPEF.git",
+  "author": "Caio Souza <caio326@icloud.com>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "p5": "^1.0.0"
+  },
+  "devDependencies": {
+    "parcel": "^1.12.4"
+  },
+  "scripts": {
+    "dev": "parcel iPEF.html",
+    "build": "parcel build iPEF.html"
+  }
+}

@@ -1,4 +1,4 @@
 tipo,xdoapoio,ydoapoio,BaixoOuCimaOuDireitaOuEsquerda
-engaste,10,0,direita
-simples,0,0,esquerda
-fixo,0,10,esquerda
+engaste,10,0,esquerda
+simples,0,0,direita
+fixo,0,10,direita
