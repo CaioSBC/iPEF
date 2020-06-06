@@ -14,6 +14,10 @@ var fimXDaCarga = [];
 var fimYDaCarga = [];
 var forcasX = 0;
 var forcasY = 0;
+var forcaX1 = 0;
+var forcaX2 = 0;
+var forcaY1 = 0;
+var forcaY2 = 0;
 var momento = 0;
 
 function preload() {
@@ -116,18 +120,73 @@ function contasEngaste(){
   for(let i = 0; i < moduloYForca.length;i++)
     momento += moduloYForca[i]*(xDaForca[i]-xDoApoio[0]);
   for(let i = 0; i < moduloXCarga.length;i++)
-    momento += moduloXCarga[i]*(fimYDaCarga[i] - inicioYDaCarga[i])*((fimYDaCarga[i] - inicioYDaCarga[i])/2);
+    momento += moduloXCarga[i]*(fimYDaCarga[i] - inicioYDaCarga[i])*(((fimYDaCarga[i] + inicioYDaCarga[i])/2)-yDoApoio[0]);
   for(let i = 0; i < moduloYCarga.length;i++)
-    momento += moduloYCarga[i]*(fimXDaCarga[i] - inicioXDaCarga[i])*((fimXDaCarga[i] - inicioXDaCarga[i])/2);
+    momento += moduloYCarga[i]*(fimXDaCarga[i] - inicioXDaCarga[i])*(((fimXDaCarga[i] + inicioXDaCarga[i])/2)-xDoApoio[0]);
   print("A força de reação em x é igual a "+forcasX+",em y é igual a "+forcasY+" e o momento de reação é "+momento); 
 }
 
 function contas1ApoioSimples(){
-  print("b");
+  if(direcao[0] == "direita" || direcao[0] == "esquerda"){
+    for(let i = 0; i < moduloXForca.length;i++)
+      forcasX += moduloXForca[i];
+    for(let i = 0; i < moduloXCarga.length;i++)
+      forcasX += moduloXCarga[i]*(fimYDaCarga[i] - inicioYDaCarga[i]);
+    print("A força de reação em x é igual a "+forcasX)
+  }
+  else{
+    for(let i = 0; i < moduloYForca.length;i++)
+      forcasY += moduloYForca[i];
+    for(let i = 0; i < moduloYCarga.length;i++)
+      forcasY += moduloYCarga[i]*(fimXDaCarga[i] - inicioXDaCarga[i]);
+    print("A força de reação em y é igual a "+forcasY)
+  }
 }
 
 function contas2ApoioSimples(){
-  print("c");
+  if((direcao[0] == "direita" || direcao[0] == "esquerda")&&(direcao[1] == "direita" || direcao[1] == "esquerda")){
+  for(let i = 0; i < moduloXForca.length;i++)
+    momento += moduloXForca[i]*(yDaForca[i]-yDoApoio[0]);
+  for(let i = 0; i < moduloYForca.length;i++)
+    momento += moduloYForca[i]*(xDaForca[i]-xDoApoio[0]);
+  for(let i = 0; i < moduloXCarga.length;i++)
+    momento += moduloXCarga[i]*(fimYDaCarga[i] - inicioYDaCarga[i])*(((fimYDaCarga[i] + inicioYDaCarga[i])/2)-yDoApoio[0]);
+  for(let i = 0; i < moduloYCarga.length;i++)
+    momento += moduloYCarga[i]*(fimXDaCarga[i] - inicioXDaCarga[i])*(((fimXDaCarga[i] + inicioXDaCarga[i])/2)-xDoApoio[0]);
+  forcaX2 = momento/(yDoApoio[1]- yDoApoio[0])
+  for(let i = 0; i < moduloXForca.length;i++)
+    forcaX1 += moduloXForca[i];
+  for(let i = 0; i < moduloXCarga.length;i++)
+    forcaX1 += moduloXCarga[i]*(fimYDaCarga[i] - inicioYDaCarga[i]);
+    print("A força nos apoios é igual a "+forcaX1+" e "+forcaX2);
+  }
+  else if((direcao[0] == "baixo" || direcao[0] == "cima")&&(direcao[1] == "baixo" || direcao[1] == "cima")){
+  for(let i = 0; i < moduloYForca.length;i++)
+    momento += moduloYForca[i]*(xDaForca[i]-xDoApoio[0]);
+  for(let i = 0; i < moduloXForca.length;i++)
+    momento += moduloXForca[i]*(yDaForca[i]-yDoApoio[0]);
+  for(let i = 0; i < moduloXCarga.length;i++)
+    momento += moduloXCarga[i]*(fimYDaCarga[i] - inicioYDaCarga[i])*(((fimYDaCarga[i] + inicioYDaCarga[i])/2)-yDoApoio[0]);
+  for(let i = 0; i < moduloYCarga.length;i++)
+    momento += moduloYCarga[i]*(fimXDaCarga[i] - inicioXDaCarga[i])*(((fimXDaCarga[i] + inicioXDaCarga[i])/2)-xDoApoio[0]);
+  forcaY2 = momento/(xDoApoio[1] - xDoApoio[0])
+  for(let i = 0; i < moduloYForca.length;i++)
+    forcaY1 += moduloYForca[i];
+  for(let i = 0; i < moduloXCarga.length;i++)
+    forcaY1 += moduloXCarga[i]*(fimXDaCarga[i] - inicioXDaCarga[i]);
+    print("A força nos apoios é igual a "+forcaY1+" e "+forcaY2);
+  }
+  else{
+    for(let i = 0; i < moduloXForca.length;i++)
+      forcasX += moduloXForca[i];
+    for(let i = 0; i < moduloXCarga.length;i++)
+      forcasX += moduloXCarga[i]*(fimYDaCarga[i] - inicioYDaCarga[i]);
+    for(let i = 0; i < moduloYForca.length;i++)
+      forcasY += moduloYForca[i];
+    for(let i = 0; i < moduloYCarga.length;i++)
+      forcasY += moduloYCarga[i]*(fimXDaCarga[i] - inicioXDaCarga[i]);
+    print("A força de reação em x é igual a "+forcasX+" e a força de reação em y é igual a "+forcasY)
+  }
 }
 
 function contas1Simples1Fixo(){
