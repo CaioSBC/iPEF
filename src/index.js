@@ -1,13 +1,10 @@
 import P5 from "p5";
 
 import sketch from "./sketch";
+import Simulation from "./simulation.js";
 
 import "../css/style.css";
 
 (() => {
-    document.getElementById("nery").addEventListener("click", () => {
-        console.log("Oi")
-    })
-
     new P5(sketch);
 })();

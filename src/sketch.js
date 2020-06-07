@@ -8,7 +8,11 @@ import csvLoad from "../csv/cargas.csv";
 import csvSupport from "../csv/apoios.csv";
 
 const sketch = (p5) => {
-    const simulation = new Simulation(p5)
+    const simulation = new Simulation(p5);
+
+    document.getElementById("calculate-button").addEventListener("click", () => {
+        simulation.runCalculations();
+    })
 
     const parseData = (data, type) => {
         switch (type) {

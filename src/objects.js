@@ -124,8 +124,6 @@ export class Force2D {
         this._y = y;
         this._magnitudeX = magnitudeX;
         this._magnitudeY = magnitudeY;
-
-        console.log(`⬇ Instantiating force (${x}, ${y}) - (${magnitudeX}, ${magnitudeY})`);
     }
 
     get x() {

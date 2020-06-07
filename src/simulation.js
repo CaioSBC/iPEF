@@ -1,6 +1,12 @@
+import * as obj from "./objects";
+
 export default class Simulation {
     constructor(p5) {
         this._objects = [];
+
+        this._netForceX = 0;
+        this._netForceY = 0;
+
         this.p5 = p5;
 
         this.xOrigin = null;
@@ -8,6 +14,18 @@ export default class Simulation {
         this.distFix = 40;
         this.distFixForce = 10;
         this.distFixLoad = 10;
+    }
+
+    get objects() {
+        return this._objects;
+    }
+
+    get netForceX() {
+        return this._netForceX;
+    }
+
+    get netForceY() {
+        return this._netForceY;
     }
 
     customToBaseX(customX) {
@@ -51,4 +69,29 @@ export default class Simulation {
             object.draw(this.p5);
         }
     }
+
+    runCalculations() {
+        this.calculateNetForces();
+    }
+
+    calculateNetForces() {
+        this._netForceX = 0;
+        this._netForceY = 0;
+
+        for (let object of this._objects) {
+            if (object instanceof obj.Force2D) {
+                this._netForceX += object.magnitudeX;
+                this._netForceY += object.magnitudeY;
+                continue;
+            }
+
+            if (object instanceof obj.Load2D) {
+                this._netForceX += object.magnitudeX * (object.endY - object.startY);
+                this._netForceY += object.magnitudeY * (object.endX - object.startX);
+                continue;
+            }
+        }
+        console.log(this._netForceX + " " + this.netForceY);
+    }
+
 }
