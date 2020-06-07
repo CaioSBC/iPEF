@@ -18,32 +18,32 @@ const sketch = (p5) => {
         switch (type) {
             case "force":
                 for (let r = 0; r < data.getRowCount(); r++) {
-                    let x = simulation.customToBaseX(data.getNum(r, 0));
-                    let y = simulation.customToBaseY(data.getNum(r, 1));
-                    let magnitudeX = simulation.customToBaseDistX(data.getNum(r, 2), "force");
-                    let magnitudeY = simulation.customToBaseDistY(data.getNum(r, 3), "force");
+                    let x = data.getNum(r, 0);
+                    let y = data.getNum(r, 1);
+                    let magnitudeX = data.getNum(r, 2);
+                    let magnitudeY = data.getNum(r, 3);
 
                     simulation.addObject(new obj.Force2D(x, y, magnitudeX, magnitudeY));
                 }
                 break;
             case "line":
                 for (let r = 0; r < data.getRowCount(); r++) {
-                    let startX = simulation.customToBaseX(data.getNum(r,0));
-                    let startY = simulation.customToBaseY(data.getNum(r,1));
-                    let endX = simulation.customToBaseX(data.getNum(r,2));
-                    let endY = simulation.customToBaseY(data.getNum(r,3));
+                    let startX = data.getNum(r,0);
+                    let startY = data.getNum(r,1);
+                    let endX = data.getNum(r,2);
+                    let endY = data.getNum(r,3);
 
                     simulation.addObject(new obj.Line2D(startX, startY, endX, endY));
                 }
                 break;
             case "load":
                 for (let r = 0; r < data.getRowCount(); r++) {
-                    let magnitudeX = simulation.customToBaseDistX(data.getNum(r, 0), "load");
-                    let magnitudeY = simulation.customToBaseDistY(data.getNum(r, 1), "load");
-                    let startX = simulation.customToBaseX(data.getNum(r,2));
-                    let startY = simulation.customToBaseY(data.getNum(r,3));
-                    let endX = simulation.customToBaseX(data.getNum(r,4));
-                    let endY = simulation.customToBaseY(data.getNum(r,5));
+                    let magnitudeX = data.getNum(r, 0);
+                    let magnitudeY = data.getNum(r, 1);
+                    let startX = data.getNum(r,2);
+                    let startY = data.getNum(r,3);
+                    let endX = data.getNum(r,4);
+                    let endY = data.getNum(r,5);
 
                     simulation.addObject(new obj.Load2D(magnitudeX, magnitudeY, startX, startY, endX, endY));
                 }
@@ -53,8 +53,8 @@ const sketch = (p5) => {
             case "support":
                 for (let r = 0; r < data.getRowCount(); r++) {
                     let type = data.getString(r, 0);
-                    let x = simulation.customToBaseX(data.getNum(r, 1));
-                    let y = simulation.customToBaseY(data.getNum(r, 2));
+                    let x = data.getNum(r, 1);
+                    let y = data.getNum(r, 2);
                     let direction = data.getString(r, 3);
 
                     switch (type) {

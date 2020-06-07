@@ -66,7 +66,7 @@ export default class Simulation {
 
     draw() {
         for (let object of this._objects) {
-            object.draw(this.p5);
+            object.draw(this.p5, this);
         }
     }
 

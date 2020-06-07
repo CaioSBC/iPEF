@@ -26,10 +26,15 @@ export class Line2D {
         return this._endY;
     }
 
-    draw(p5) {
+    draw(p5, simulation) {
+        let pixelStartX = simulation.customToBaseX(this._startX);
+        let pixelStartY = simulation.customToBaseY(this._startY);
+        let pixelEndX = simulation.customToBaseX(this._endX);
+        let pixelEndY = simulation.customToBaseY(this._endY);
+
         p5.stroke("#c1c1c1");
         p5.strokeWeight(3);
-        p5.line(this._startX, this._startY, this._endX, this._endY);
+        p5.line(pixelStartX, pixelStartY, pixelEndX, pixelEndY);
     }
 }
 
@@ -67,13 +72,20 @@ export class Load2D {
         return this._magnitudeY;
     }
 
-    draw(p5) {
-        if (this._magnitudeX == 0 && this._magnitudeY == 0) {
+    draw(p5, simulation) {
+        let pixelMagnitudeX = simulation.customToBaseDistX(this._magnitudeX, "load");
+        let pixelMagnitudeY = simulation.customToBaseDistY(this._magnitudeY, "load");
+        let pixelStartX = simulation.customToBaseX(this._startX);
+        let pixelStartY = simulation.customToBaseY(this._startY);
+        let pixelEndX = simulation.customToBaseX(this._endX);
+        let pixelEndY = simulation.customToBaseY(this._endY);
+
+        if (pixelMagnitudeX == 0 && pixelMagnitudeY == 0) {
             return;
         }
 
-        let sizeX = this._endX - this.startX;
-        let sizeY = this._endY - this.startY;
+        let sizeX = pixelEndX - pixelStartX;
+        let sizeY = pixelEndY - pixelStartY;
 
         let deltaX = 0;
         let deltaY = 0;
@@ -81,18 +93,18 @@ export class Load2D {
         let fixDeltaX = sizeX / 20;
         let fixDeltaY = sizeY / 20;
 
-        let vAux1 = p5.createVector(this._startX + this._magnitudeX, this._startY + this._magnitudeY);
-        let vAux2 = p5.createVector(this._startX, this._startY);
+        let vStart = p5.createVector(pixelStartX - pixelMagnitudeX, pixelStartY - pixelMagnitudeY);
+        let vEnd = p5.createVector(pixelStartX, pixelStartY);
 
-        while ((this._startX + deltaX) != (this._endX + fixDeltaX) || (this._startY + deltaY) != (this._endY + fixDeltaY)) {
-            let vResult = Vector.sub(vAux2, vAux1);
-            drawArrow(p5, vAux1, vResult, "#346DC3");
+        while ((pixelStartX + deltaX) != (pixelEndX + fixDeltaX) || (pixelStartY + deltaY) != (pixelEndY + fixDeltaY)) {
+            let vResult = Vector.sub(vEnd, vStart);
+            drawArrow(p5, vStart, vResult, "#346DC3");
 
             deltaX = deltaX + fixDeltaX;
             deltaY = deltaY + fixDeltaY;
 
-            vAux1 = p5.createVector((this._startX + deltaX) + this.magnitudeX, (this._startY + deltaY) + this.magnitudeY);
-            vAux2 = p5.createVector(this._startX + deltaX, this.startY + deltaY);
+            vStart = p5.createVector((pixelStartX + deltaX) - pixelMagnitudeX, (pixelStartY + deltaY) - pixelMagnitudeY);
+            vEnd = p5.createVector(pixelStartX + deltaX, pixelStartY + deltaY);
        }
     }
 }
@@ -111,10 +123,13 @@ export class Point {
         return this._y;
     }
 
-    draw(p5) {
+    draw(p5, simulation) {
+        let pixelX = simulation.customToBaseX(this._x);
+        let pixelY = simulation.customToBaseY(this._y);
+
         p5.stroke("#c1c1c1");
         p5.strokeWeight(5);
-        p5.point(this._x, this._y);
+        p5.point(pixelX, pixelY);
     }
 }
 
@@ -142,16 +157,21 @@ export class Force2D {
         return this._magnitudeY;
     }
 
-    draw(p5) {
-        if (this._magnitudeX == 0 && this._magnitudeY == 0) {
+    draw(p5, simulation) {
+        let pixelX = simulation.customToBaseX(this._x);
+        let pixelY = simulation.customToBaseY(this._y);
+        let pixelMagnitudeX = simulation.customToBaseDistX(this._magnitudeX, "force");
+        let pixelMagnitudeY = simulation.customToBaseDistY(this._magnitudeY, "force");
+
+        if (pixelMagnitudeX == 0 && pixelMagnitudeY == 0) {
             return;
         }
 
         p5.stroke("#F14C42");
         p5.strokeWeight(3);
 
-        let vStart= p5.createVector(this._x, this._y);
-        let vEnd = p5.createVector(this._x + this._magnitudeX, this._y + this._magnitudeY);
+        let vStart = p5.createVector(pixelX - pixelMagnitudeX, pixelY - pixelMagnitudeY);
+        let vEnd= p5.createVector(pixelX, pixelY);
         let vResult = Vector.sub(vEnd, vStart);
 
         drawArrow(p5, vStart, vResult, "#F14C42");
@@ -177,30 +197,33 @@ export class SimpleSupport {
         return this._direction;
     }
 
-    draw(p5) {
+    draw(p5, simulation) {
+        let pixelX = simulation.customToBaseX(this._x);
+        let pixelY = simulation.customToBaseY(this._y);
+
         p5.stroke("#309339");
         p5.strokeWeight(5);
 
         switch(this._direction) {
             case "esquerda":
                 p5.fill("#2c2c2c");
-                p5.triangle(this._x, this._y, this._x + 20, this._y + 20, this._x + 20, this._y - 20);
-                p5.line(this._x+ 30, this._y + 20, this._x + 30, this._y - 20);
+                p5.triangle(pixelX, pixelY, pixelX + 20, pixelY + 20, pixelX + 20, pixelY - 20);
+                p5.line(pixelX + 30, pixelY + 20, pixelX + 30, pixelY - 20);
                 break;
             case "direita":
                 p5.fill("#2c2c2c");
-                p5.triangle(this._x, this._y, this._x - 20, this._y + 20, this._x - 20, this._y  - 20);
-                p5.line(this._x - 30, this._y + 20, this._x - 30, this._y - 20);
+                p5.triangle(pixelX, pixelY, pixelX - 20, pixelY + 20, pixelX - 20, pixelY  - 20);
+                p5.line(pixelX - 30, pixelY + 20, pixelX - 30, pixelY - 20);
                 break;
             case "cima":
                 p5.fill("#2c2c2c");
-                p5.triangle(this._x, this._y, this._x + 20, this._y + 20, this._x - 20, this._y + 20);
-                p5.line(this._x + 20, this._y + 30, this._x - 20, this._y + 30);
+                p5.triangle(pixelX, pixelY, pixelX + 20, pixelY + 20, pixelX - 20, pixelY + 20);
+                p5.line(pixelX + 20, pixelY + 30, pixelX - 20, pixelY + 30);
                 break;
             case "baixo":
                 p5.fill("#2c2c2c");
-                p5.triangle(this._x, this._y, this._x + 20, this._y - 20, this._x - 20, this._y - 20);
-                p5.line(this._x + 20, this._y - 30, this._x - 20, this._y - 30);
+                p5.triangle(pixelX, pixelY, pixelX + 20, pixelY - 20, pixelX - 20, pixelY - 20);
+                p5.line(pixelX + 20, pixelY - 30, pixelX - 20, pixelY - 30);
                 break;
             default:
                 break;
@@ -227,26 +250,29 @@ export class PinnedSupport {
         return this._direction;
     }
 
-    draw(p5) {
+    draw(p5, simulation) {
+        let pixelX = simulation.customToBaseX(this._x);
+        let pixelY = simulation.customToBaseY(this._y);
+
         p5.stroke("#309339");
         p5.strokeWeight(5);
 
         switch(this._direction) {
             case "esquerda":
                 p5.fill("#2c2c2c");
-                p5.triangle(this._x, this._y, this._x + 20, this._y + 20, this._x + 20, this._y - 20);
+                p5.triangle(pixelX, pixelY, pixelX + 20, pixelY + 20, pixelX + 20, pixelY - 20);
                 break;
             case "direita":
                 p5.fill("#2c2c2c");
-                p5.triangle(this._x, this._y, this._x - 20, this._y + 20, this._x - 20, this._y  - 20);
+                p5.triangle(pixelX, pixelY, pixelX - 20, pixelY + 20, pixelX - 20, pixelY  - 20);
                 break;
             case "cima":
                 p5.fill("#2c2c2c");
-                p5.triangle(this._x, this._y, this._x + 20, this._y + 20, this._x - 20, this._y + 20);
+                p5.triangle(pixelX, pixelY, pixelX + 20, pixelY + 20, pixelX - 20, pixelY + 20);
                 break;
             case "baixo":
                 p5.fill("#2c2c2c");
-                p5.triangle(this._x, this._y, this._x + 20, this._y - 20, this._x - 20, this._y - 20);
+                p5.triangle(pixelX, pixelY, pixelX + 20, pixelY - 20, pixelX - 20, pixelY - 20);
                 break;
             default:
                 break;
@@ -273,14 +299,17 @@ export class FixedSupport {
         return this._direction;
     }
 
-    draw(p5) {
+    draw(p5, simulation) {
+        let pixelX = simulation.customToBaseX(this._x);
+        let pixelY = simulation.customToBaseY(this._y);
+
         p5.stroke("#309339");
         p5.strokeWeight(5);
 
         if (this._direction == "esquerda" || "direita") {
-            p5.line(this._x, this._y + 30, this._x, this._y - 30);
+            p5.line(pixelX, pixelY + 30, pixelX, pixelY - 30);
         } else {
-            p5.line(this._x + 30, this._y, this._x - 30, this._y);
+            p5.line(pixelX + 30, pixelY, pixelX - 30, pixelY);
         }
     }
 }
