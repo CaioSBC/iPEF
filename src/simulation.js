@@ -71,10 +71,15 @@ export default class Simulation {
     }
 
     runCalculations() {
+        //essa é a função que será chamada pelo botão calcular, seria tipo a "main" dos cálculos
         this.calculateNetForces();
     }
 
     calculateNetForces() {
+        //essa é uma função q eu fiz pra calcular as forças resultantes em X e Y
+        //repare que tem uma lista de objetos com tudo o que tá sendo desenhado no programa
+        //cada forca, apoio, etc, tem suas proprias propriedas (x, y, magnitude, etc)
+        //para mais detalhes, olha o arquivo object.js
         this._netForceX = 0;
         this._netForceY = 0;
 
