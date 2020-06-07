@@ -36,6 +36,14 @@ export default class Simulation {
         return this.yOrigin - (customY * this.distFix);
     }
 
+    baseToCustomX(baseX) {
+        return (baseX - this.xOrigin) / this.distFix;
+    }
+
+    baseToCustomY(baseY) {
+        return (this.yOrigin - baseY) / this.distFix;
+    }
+
     customToBaseDistX(distanceX, context) {
         switch (context) {
             case "force":

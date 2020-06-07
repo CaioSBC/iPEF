@@ -104,9 +104,9 @@ const sketch = (p5) => {
     };
 
     p5.draw = () => {
-        p5.clear()
+        p5.clear();
         simulation.draw();
-        updatePosition(p5.mouseX, p5.mouseY);
+        updatePosition(simulation.baseToCustomX(p5.mouseX), simulation.baseToCustomY(p5.mouseY));
     };
 
     p5.windowResized = () => {

@@ -3,7 +3,7 @@ const outputMessage = (message) => {
 }
 
 const updatePosition = (posX, posY) => {
-    document.getElementById("position").innerHTML = "X: " + posX + "</br>" + "Y: " + posY;
+    document.getElementById("position").innerHTML = "X: " + posX.toFixed(3) + "</br>" + "Y: " + posY.toFixed(3);
 }
 
 const drawArrow = (p5, base, vec, myColor) => {
