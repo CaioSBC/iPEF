@@ -1,202 +1,115 @@
-var moduloXForca = [];
-var moduloYForca = [];
-var xDaForca = [];
-var yDaForca = [];
-var tipo = [];
-var xDoApoio = [];
-var yDoApoio = [];
-var direcao = [];
-var moduloXCarga = [];
-var moduloYCarga = [];
-var inicioXDaCarga = [];
-var inicioYDaCarga = [];
-var fimXDaCarga = [];
-var fimYDaCarga = [];
-var forcasX = 0;
-var forcasY = 0;
-var forcaX1 = 0;
-var forcaX2 = 0;
-var forcaY1 = 0;
-var forcaY2 = 0;
-var momento = 0;
+import * as obj from "./objects";
 
-function preload() {
-    
-  table = loadTable('pontos.csv', 'csv', 'header');
-  table2 = loadTable('linhas.csv','csv','header');
-  table3 = loadTable('forcas.csv','csv','header');
-  table4 = loadTable('apoios.csv','csv','header');
-  table5= loadTable('cargas.csv','csv','header');//ir somando em intervalos de delta x e delta y para fazer varias setas
-}
+export default class OperationsFixedSupport {
+    constructor(p5) {
+        this._objects = [];
 
-function setup() {
-  createCanvas(400, 400);
-}
+        this._netForceX = 0;
+        this._netForceY = 0;
+        this._momentum = 0;
 
-function draw() {
-  background(220);
-  dadosForças();
-  dadosApoios();
-  dadosCargas();
-  if(tipo[0]=="engaste")
-    contasEngaste();
-  else if(tipo[0]=="simples" && tipo.length == 1)
-    contas1ApoioSimples();
-  else if(tipo[0]=="fixo" && tipo.length == 1)
-    contas1ApoioFixo();
-  else if((tipo[0]=="fixo" || tipo[1]=="fixo") && tipo.length == 2)
-    contas1Simples1Fixo();
-  else if(tipo[0]=="simples" && tipo[1]=="simples" && tipo.length == 2)
-    contas2ApoioSimples();
-  else if(tipo[0]=="simples" && tipo[1]=="simples" && tipo.length == 3)
-    contas3ApoioSimples();
-  else
-    print("O Sistema não pode ser resolvido")
-  noLoop();
-}
+        this.p5 = p5;
 
-function dadosForças(){
-  for (let r = 0; r < table3.getRowCount(); r++){
-    xDaForca[r] = table3.getNum(r,0);
-  }
-  for (let r = 0; r < table3.getRowCount(); r++){
-    yDaForca[r] = table3.getNum(r,1);
-  }
-  for (let r = 0; r < table3.getRowCount(); r++){
-    moduloXForca[r] = table3.getNum(r,2);
-  }
-  for (let r = 0; r < table3.getRowCount(); r++){
-    moduloYForca[r] = table3.getNum(r,3);
-  }
-}
+        this.xOrigin = null;
+        this.yOrigin = null;
+        this.distFix = 40;
+        this.distFixForce = 10;
+        this.distFixLoad = 10;
+    }
 
-function dadosApoios(){
-  for (let r = 0; r < table4.getRowCount(); r++){
-    tipo[r] = table4.getString(r,0);
-  }
-  for (let r = 0; r < table4.getRowCount(); r++){
-    xDoApoio[r] = table4.getNum(r,1);
-  }
-  for (let r = 0; r < table4.getRowCount(); r++){
-    yDoApoio[r] = table4.getNum(r,2);
-  }
-  for (let r = 0; r < table4.getRowCount(); r++){
-    direcao[r] = table4.getString(r,3);
-  }
-}
+    get objects() {
+        return this._objects;
+    }
 
-function dadosCargas(){
-  for (let r = 0; r < table5.getRowCount(); r++){
-    moduloXCarga[r] = table5.getNum(r,0);
-  }
-  for (let r = 0; r < table5.getRowCount(); r++){
-    moduloYCarga[r] = table5.getNum(r,1);
-  }
-  for (let r = 0; r < table5.getRowCount(); r++){
-    inicioXDaCarga[r] = table5.getNum(r,2);
-  }
-  for (let r = 0; r < table5.getRowCount(); r++){
-    inicioYDaCarga[r] = table5.getNum(r,3);
-  }
-  for (let r = 0; r < table5.getRowCount(); r++){
-    fimXDaCarga[r] = table5.getNum(r,4);
-  }
-  for (let r = 0; r < table5.getRowCount(); r++){
-    fimYDaCarga[r] = table5.getNum(r,5);
-  }
-}
+    get netForceX() {
+        return this._netForceX;
+    }
 
-function contasEngaste(){
-  for(let i = 0; i < moduloXForca.length;i++)
-    forcasX += moduloXForca[i];
-  for(let i = 0; i < moduloXCarga.length;i++)
-    forcasX += moduloXCarga[i]*(fimYDaCarga[i] - inicioYDaCarga[i]);
-  for(let i = 0; i < moduloYForca.length;i++)
-    forcasY += moduloYForca[i];
-  for(let i = 0; i < moduloYCarga.length;i++)
-    forcasY += moduloYCarga[i]*(fimXDaCarga[i] - inicioXDaCarga[i]);
-  for(let i = 0; i < moduloXForca.length;i++)
-    momento += moduloXForca[i]*(yDaForca[i]-yDoApoio[0]);
-  for(let i = 0; i < moduloYForca.length;i++)
-    momento += moduloYForca[i]*(xDaForca[i]-xDoApoio[0]);
-  for(let i = 0; i < moduloXCarga.length;i++)
-    momento += moduloXCarga[i]*(fimYDaCarga[i] - inicioYDaCarga[i])*(((fimYDaCarga[i] + inicioYDaCarga[i])/2)-yDoApoio[0]);
-  for(let i = 0; i < moduloYCarga.length;i++)
-    momento += moduloYCarga[i]*(fimXDaCarga[i] - inicioXDaCarga[i])*(((fimXDaCarga[i] + inicioXDaCarga[i])/2)-xDoApoio[0]);
-  print("A força de reação em x é igual a "+forcasX+",em y é igual a "+forcasY+" e o momento de reação é "+momento); 
-}
+    get netForceY() {
+        return this._netForceY;
+    }
 
-function contas1ApoioSimples(){
-  if(direcao[0] == "direita" || direcao[0] == "esquerda"){
-    for(let i = 0; i < moduloXForca.length;i++)
-      forcasX += moduloXForca[i];
-    for(let i = 0; i < moduloXCarga.length;i++)
-      forcasX += moduloXCarga[i]*(fimYDaCarga[i] - inicioYDaCarga[i]);
-    print("A força de reação em x é igual a "+forcasX)
-  }
-  else{
-    for(let i = 0; i < moduloYForca.length;i++)
-      forcasY += moduloYForca[i];
-    for(let i = 0; i < moduloYCarga.length;i++)
-      forcasY += moduloYCarga[i]*(fimXDaCarga[i] - inicioXDaCarga[i]);
-    print("A força de reação em y é igual a "+forcasY)
-  }
-}
+    customToBaseX(customX) {
+        return this.xOrigin + (customX * this.distFix);
+    }
 
-function contas2ApoioSimples(){
-  if((direcao[0] == "direita" || direcao[0] == "esquerda")&&(direcao[1] == "direita" || direcao[1] == "esquerda")){
-  for(let i = 0; i < moduloXForca.length;i++)
-    momento += moduloXForca[i]*(yDaForca[i]-yDoApoio[0]);
-  for(let i = 0; i < moduloYForca.length;i++)
-    momento += moduloYForca[i]*(xDaForca[i]-xDoApoio[0]);
-  for(let i = 0; i < moduloXCarga.length;i++)
-    momento += moduloXCarga[i]*(fimYDaCarga[i] - inicioYDaCarga[i])*(((fimYDaCarga[i] + inicioYDaCarga[i])/2)-yDoApoio[0]);
-  for(let i = 0; i < moduloYCarga.length;i++)
-    momento += moduloYCarga[i]*(fimXDaCarga[i] - inicioXDaCarga[i])*(((fimXDaCarga[i] + inicioXDaCarga[i])/2)-xDoApoio[0]);
-  forcaX2 = momento/(yDoApoio[1]- yDoApoio[0])
-  for(let i = 0; i < moduloXForca.length;i++)
-    forcaX1 += moduloXForca[i];
-  for(let i = 0; i < moduloXCarga.length;i++)
-    forcaX1 += moduloXCarga[i]*(fimYDaCarga[i] - inicioYDaCarga[i]);
-    print("A força nos apoios é igual a "+forcaX1+" e "+forcaX2);
-  }
-  else if((direcao[0] == "baixo" || direcao[0] == "cima")&&(direcao[1] == "baixo" || direcao[1] == "cima")){
-  for(let i = 0; i < moduloYForca.length;i++)
-    momento += moduloYForca[i]*(xDaForca[i]-xDoApoio[0]);
-  for(let i = 0; i < moduloXForca.length;i++)
-    momento += moduloXForca[i]*(yDaForca[i]-yDoApoio[0]);
-  for(let i = 0; i < moduloXCarga.length;i++)
-    momento += moduloXCarga[i]*(fimYDaCarga[i] - inicioYDaCarga[i])*(((fimYDaCarga[i] + inicioYDaCarga[i])/2)-yDoApoio[0]);
-  for(let i = 0; i < moduloYCarga.length;i++)
-    momento += moduloYCarga[i]*(fimXDaCarga[i] - inicioXDaCarga[i])*(((fimXDaCarga[i] + inicioXDaCarga[i])/2)-xDoApoio[0]);
-  forcaY2 = momento/(xDoApoio[1] - xDoApoio[0])
-  for(let i = 0; i < moduloYForca.length;i++)
-    forcaY1 += moduloYForca[i];
-  for(let i = 0; i < moduloXCarga.length;i++)
-    forcaY1 += moduloXCarga[i]*(fimXDaCarga[i] - inicioXDaCarga[i]);
-    print("A força nos apoios é igual a "+forcaY1+" e "+forcaY2);
-  }
-  else{
-    for(let i = 0; i < moduloXForca.length;i++)
-      forcasX += moduloXForca[i];
-    for(let i = 0; i < moduloXCarga.length;i++)
-      forcasX += moduloXCarga[i]*(fimYDaCarga[i] - inicioYDaCarga[i]);
-    for(let i = 0; i < moduloYForca.length;i++)
-      forcasY += moduloYForca[i];
-    for(let i = 0; i < moduloYCarga.length;i++)
-      forcasY += moduloYCarga[i]*(fimXDaCarga[i] - inicioXDaCarga[i]);
-    print("A força de reação em x é igual a "+forcasX+" e a força de reação em y é igual a "+forcasY)
-  }
-}
+    customToBaseY(customY) {
+        return this.yOrigin - (customY * this.distFix);
+    }
 
-function contas1Simples1Fixo(){
-  print("d");
-}
+    customToBaseDistX(distanceX, context) {
+        switch (context) {
+            case "force":
+                return (distanceX * this.distFixForce);
+            case "load":
+                return (distanceX * this.distFixLoad);
+            default:
+                throw new Error("Impossible case!");
+        }
+    }
 
-function contas1ApoioFixo(){
-  print("e");
-}
+    customToBaseDistY(distanceY, context) {
+        switch (context) {
+            case "force":
+                return (-1) * (distanceY * this.distFixForce);
+            case "load":
+                return (-1) * (distanceY * this.distFixLoad);
+            default:
+                throw new Error("Impossible case!");
+        }
+    }
 
-function contas3ApoioSimples(){
-  print("f");
+    addObject(object) {
+        if (object) {
+            this._objects.push(object);
+        }
+    }
+
+    draw() {
+        for (let object of this._objects) {
+            object.draw(this.p5, this);
+        }
+    }
+
+    runCalculations() {
+        //essa é a função que será chamada pelo botão calcular, seria tipo a "main" dos cálculos
+        this.calculateNetForces();
+    }
+
+    calculateNetForces() {
+        //essa é uma função q eu fiz pra calcular as forças resultantes em X e Y
+        //repare que tem uma lista de objetos com tudo o que tá sendo desenhado no programa
+        //cada forca, apoio, etc, tem suas proprias propriedas (x, y, magnitude, etc)
+        //para mais detalhes, olha o arquivo object.js
+        this._netForceX = 0;
+        this._netForceY = 0;
+
+        for (let object of this._objects) {
+           if (object instanceof obj.FixedSupport){
+                xPosition = object.x;
+                yPosition = object.y;
+            }
+        }
+      
+        for (let object of this._objects) {
+            if (object instanceof obj.Force2D) {
+                this._netForceX += object.magnitudeX;
+                this._netForceY += object.magnitudeY;
+                this.momentum += object.magnitudeX*(object.x-xPosition);
+                this.momentum += object.magnitudeY*(object.y-yPosition);
+                continue;
+            }
+
+            if (object instanceof obj.Load2D) {
+                this._netForceX += object.magnitudeX * (object.endY - object.startY);
+                this._netForceY += object.magnitudeY * (object.endX - object.startX);
+                this.momentum += object.magnitudeX * (object.endY - object.startY)*(((object.endY + object.startY)/2)-yPosition);
+                this.momentum += object.magnitudeY * (object.endX - object.startX)(((object.endX + object.startX)/2)-xPosition);
+                continue;
+            }
+        }
+      this.momentum = (-1)*this.momentum
+        console.log(this._netForceX + " " + this.netForceY +  " " + this.momentum);
+    }
+
 }
