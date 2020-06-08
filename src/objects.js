@@ -177,7 +177,7 @@ export class Force2D {
         p5.stroke('#FA3D3A');
         p5.strokeWeight(4);
         let magnitude = p5.sqrt((this._magnitudeX*this._magnitudeX)+(this._magnitudeY*this._magnitudeY));
-        p5.text(magnitude.toFixed(2)+ ' N',pixelX - 1.5*pixelMagnitudeX,pixelY - 1.5*pixelMagnitudeY);
+        p5.text(magnitude.toFixed(2)+ ' N',pixelX - 1.5*pixelMagnitudeX -60,pixelY - 1.5*pixelMagnitudeY);
         p5.stroke("#F14C42");
         p5.strokeWeight(3);
         
