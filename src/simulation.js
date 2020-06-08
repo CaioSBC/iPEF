@@ -135,62 +135,64 @@ export default class Simulation {
 
         this.calculateNetForces();
 
-        if(this.fixedSupportCount == 1 && this.pinnedSupportCount == 0 && this.simpleSupportCount ==0)
+        console.log(this._fixedSupportCount);
+        if (this._fixedSupportCount == 1 && this._pinnedSupportCount == 0 && this._simpleSupportCount == 0) {
             console.log("Vertical Reaction: "+this._netForceY+", Horizontal Reaction: "+this._netForceX+", Momentum: "+this._momentum);
-        else if(this.fixedSupportCount == 0 && this.pinnedSupportCount == 1 && this.simpleSupportCount ==0)
+        } else if (this._fixedSupportCount == 0 && this._pinnedSupportCount == 1 && this._simpleSupportCount ==0) {
             console.log("Vertical Reaction: "+this._netForceY+" and Horizontal Reaction: "+this._netForceX);
-        else if(this.fixedSupportCount == 0 && this.pinnedSupportCount == 0 && this.simpleSupportCount ==1){
-            if(this.horizontalCount == 1)
+        } else if (this._fixedSupportCount == 0 && this._pinnedSupportCount == 0 && this._simpleSupportCount ==1) {
+            if(this._horizontalCount == 1) {
                 console.log("Horizontal Reaction: "+this._netForceX);
-            else if(this.verticalCount == 1)
+            } else if (this._verticalCount == 1) {
                 console.log("Vertical Reaction: "+this._netForceY);
+            }
         }
-        else if(this.fixedSupportCount == 0 && this.pinnedSupportCount == 1 && this.simpleSupportCount ==1){
-            if(this.horizontalCount == 1){
-                this._x2Force = this._momentum/(this.support1Y-this._yPosition);
+        else if (this._fixedSupportCount == 0 && this._pinnedSupportCount == 1 && this._simpleSupportCount ==1){
+            if (this._horizontalCount == 1) {
+                this._x2Force = this._momentum/(this._support1Y-this._yPosition);
                 this._x1Force = this._netForceX + this._x2Force;
                 this._y1Force = this._netForceY;
                 console.log("Simple support reaction: "+this._x2Force+",vertical pinned support reaction: "+this._y1Force+" and horizontal reaction: "+this._x1Force);
             }
-            else if(this.verticalCount == 1){
+            else if (this.verticalCount == 1){
                 this._y2Force = this._momentum/(this.support2X-this._xPosition);
                 this._y1Force = this._netForceY + this._y2Force;
                 this._x1Force = this._netForceX;
                 console.log("Simple support reaction: "+this._y2Force+",vertical pinned support reaction: "+this._y1Force+" and horizontal reaction: "+this._x1Force);
             }
         }
-        else if(this.fixedSupportCount == 0 && this.pinnedSupportCount == 0 && this.simpleSupportCount ==2){
-            if(this.horizontalCount == 2){
-                this._x1Force = this._momentum/(this.support1Y-this._yPosition);
+        else if (this._fixedSupportCount == 0 && this._pinnedSupportCount == 0 && this._simpleSupportCount ==2){
+            if (this._horizontalCount == 2){
+                this._x1Force = this._momentum/(this._support1Y-this._yPosition);
                 this._x2Force = this._netForceX + this._x1Force;
-                console.log("Reaction in the simple support with coordinates: x="+this.support1X+" y="+this.support1Y+": "+this._x1Force+" and reaction in the other support: "+this._x2Force);
+                console.log("Reaction in the simple support with coordinates: x="+this._support1X+" y="+this._support1Y+": "+this._x1Force+" and reaction in the other support: "+this._x2Force);
             }
-            else if(this.verticalCount == 2){
-                this._y1Force = this._momentum/(this.support2X-this._xPosition);
+            else if (this._verticalCount == 2) {
+                this._y1Force = this._momentum/(this._support2X-this._xPosition);
                 this._y2Force = this._netForceY + this._y1Force;
-                console.log("Reaction in the simple support with coordinates: x="+this.support2X+" y="+this.support2Y+": "+this._y1Force+" and reaction in the other support: "+this._y2Force);
+                console.log("Reaction in the simple support with coordinates: x="+this._support2X+" y="+this._support2Y+": "+this._y1Force+" and reaction in the other support: "+this._y2Force);
             }
           else
             console.log("Reaction in vertical support: "+this._netforceY+" and in the horizontal support: "+this._netforceX); 
         }
-        else if(this.fixedSupportCount == 0 && this.pinnedSupportCount == 0 && this.simpleSupportCount ==3){
-            if(this.horizontalCount == 2){
+        else if(this._fixedSupportCount == 0 && this._pinnedSupportCount == 0 && this._simpleSupportCount ==3){
+            if(this._horizontalCount == 2){
                 this._y1Force = this._netForceY;
-                this._momentum -= this._y1Force*(this.support2X-this._xPosition);
-                this._x1Force = this._momentum/(this.support1Y-this._yPosition);
+                this._momentum -= this._y1Force*(this._support2X-this._xPosition);
+                this._x1Force = this._momentum/(this._support1Y-this._yPosition);
                 this._x2Force = this._netForceX + this._x1Force;
-                console.log("Reaction in the simple support with coordinates: x="+this.support1X+" y="+this.support1Y+": "+this._x1Force+", reaction in the other horizontal support: "+this._x2Force+" and reaction in the vertical support: "+this._y1Force);
+                console.log("Reaction in the simple support with coordinates: x="+this._support1X+" y="+this._support1Y+": "+this._x1Force+", reaction in the other horizontal support: "+this._x2Force+" and reaction in the vertical support: "+this._y1Force);
             }
-            else if(this.verticalCount == 2){
+            else if(this._verticalCount == 2){
                 this._x1Force = this._netForceX;
                 this._momentum -= this._x1Force*(this.support1Y-this._yPosition);
                 this._y1Force = this._momentum/(this.support2X-this._xPosition);
                 this._y2Force = this._netForceY + this._y1Force;
-                console.log("Reaction in the simple support with coordinates: x="+this.support2X+" y="+this.support2Y+": "+this._y1Force+", reaction in the other vertical support: "+this._y2Force+" and reaction in the horizontal support: "+this._x1Force);
+                console.log("Reaction in the simple support with coordinates: x="+this._support2X+" y="+this._support2Y+": "+this._y1Force+", reaction in the other vertical support: "+this._y2Force+" and reaction in the horizontal support: "+this._x1Force);
             }
+        } else {
+            console.log("It's not possible to solve the system.");
         }
-        else
-          console.log("It's not possible to solve the system.");
     }
 
     calculateNetForces() {
