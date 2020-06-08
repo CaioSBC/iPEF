@@ -96,6 +96,13 @@ export class Load2D {
         let vStart = p5.createVector(pixelStartX - pixelMagnitudeX, pixelStartY - pixelMagnitudeY);
         let vEnd = p5.createVector(pixelStartX, pixelStartY);
 
+
+        p5.textSize(30);
+        p5.stroke('#3A57FA');
+        p5.strokeWeight(4);
+        let magnitude = p5.sqrt((this._magnitudeX*this._magnitudeX)+(this._magnitudeY*this._magnitudeY));
+        p5.text(magnitude.toFixed(2)+ 'N/m',(pixelStartX+((pixelEndX-pixelStartX)/2))-35*this._magnitudeX-50,(pixelStartY+((pixelEndY-pixelStartY)/2)) + 20*this._magnitudeY);
+
         while ((pixelStartX + deltaX) != (pixelEndX + fixDeltaX) || (pixelStartY + deltaY) != (pixelEndY + fixDeltaY)) {
             let vResult = Vector.sub(vEnd, vStart);
             drawArrow(p5, vStart, vResult, "#346DC3");
@@ -166,10 +173,14 @@ export class Force2D {
         if (pixelMagnitudeX == 0 && pixelMagnitudeY == 0) {
             return;
         }
-
+        p5.textSize(30);
+        p5.stroke('#FA3D3A');
+        p5.strokeWeight(4);
+        let magnitude = p5.sqrt((this._magnitudeX*this._magnitudeX)+(this._magnitudeY*this._magnitudeY));
+        p5.text(magnitude.toFixed(2)+ ' N',pixelX - 1.5*pixelMagnitudeX,pixelY - 1.5*pixelMagnitudeY);
         p5.stroke("#F14C42");
         p5.strokeWeight(3);
-
+        
         let vStart = p5.createVector(pixelX - pixelMagnitudeX, pixelY - pixelMagnitudeY);
         let vEnd= p5.createVector(pixelX, pixelY);
         let vResult = Vector.sub(vEnd, vStart);

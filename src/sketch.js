@@ -6,6 +6,7 @@ import csvForce from "../csv/forcas.csv";
 import csvLine from "../csv/linhas.csv";
 import csvLoad from "../csv/cargas.csv";
 import csvSupport from "../csv/apoios.csv";
+import { Color } from "p5";
 
 const sketch = (p5) => {
     const simulation = new Simulation(p5);
@@ -105,6 +106,11 @@ const sketch = (p5) => {
 
     p5.draw = () => {
         p5.clear();
+        p5.stroke(255,254,255);
+        p5.strokeWeight(1);
+        p5.line(simulation.xOrigin-document.getElementById("canvas").offsetWidth,simulation.yOrigin,document.getElementById("canvas").offsetWidth,simulation.yOrigin);
+        p5.line(simulation.xOrigin,simulation.yOrigin+(document.getElementById("canvas").offsetHeight),simulation.xOrigin,-(document.getElementById("canvas").offsetHeight));
+        
         simulation.draw();
         updatePosition(simulation.baseToCustomX(p5.mouseX), simulation.baseToCustomY(p5.mouseY));
     };
