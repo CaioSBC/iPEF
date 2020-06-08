@@ -4,6 +4,7 @@ import { outputMessage } from "./utils";
 export default class Simulation {
     constructor(p5) {
         this._objects = [];
+        this._calculatedForces = [];
 
         this._fixedSupportCount = 0;
         this._pinnedSupportCount = 0;
@@ -89,8 +90,18 @@ export default class Simulation {
         }
     }
 
+    addCalculatedForce(object) {
+        if (object instanceof obj.Force2D) {
+            this._calculatedForces.push(object);
+        }
+    }
+
     draw() {
         for (let object of this._objects) {
+            object.draw(this.p5, this);
+        }
+ 
+        for (let object of this._calculatedForces) {
             object.draw(this.p5, this);
         }
     }
@@ -126,50 +137,75 @@ export default class Simulation {
                       this._xPosition = object._x;
                       this._yPosition = object._y;
                     }
-                    else if(this.verticalCount == 1){
+                    else if(this._verticalCount == 1){
                       this._support2X = object._x;
-                      this._support2Y = object._y
+                      this._support2Y = object._y;
                     }
                 }
             }
         }
-
         this.calculateNetForces();
 
         if (this._fixedSupportCount == 1 && this._pinnedSupportCount == 0 && this._simpleSupportCount == 0) {
-            outputMessage("Vertical Reaction: "+this._netForceY+", Horizontal Reaction: "+this._netForceX+", Momentum: "+this._momentum);
+            outputMessage("Vertical Reaction: "+ this._netForceY+", Horizontal Reaction: "+ this._netForceX+", Momentum: " + this._momentum);
             
         } else if (this._fixedSupportCount == 0 && this._pinnedSupportCount == 1 && this._simpleSupportCount ==0) {
-            outputMessage("Vertical Reaction: "+this._netForceY+" and Horizontal Reaction: "+this._netForceX);
+            outputMessage("Vertical Reaction: "+ this._netForceY+" and Horizontal Reaction: " + this._netForceX);
+            this.addCalculatedForce(new obj.Force2D(this._xPosition, this._yPosition, this._netForceX, 0));
+            this.addCalculatedForce(new obj.Force2D(this._xPosition, this._yPosition, 0, this._netForceY));
 
-        } else if (this._fixedSupportCount == 0 && this._pinnedSupportCount == 0 && this._simpleSupportCount ==1) {
+        } else if (this._fixedSupportCount == 0 && this._pinnedSupportCount == 0 && this._simpleSupportCount == 1) {
             if(this._horizontalCount == 1) {
                 outputMessage("Horizontal Reaction: "+this._netForceX);
+                this.addCalculatedForce(new obj.Force2D(this._xPosition, this._yPosition, this._netForceX, 0));
+
             } else if (this._verticalCount == 1) {
                 outputMessage("Vertical Reaction: "+this._netForceY);
+                this.addCalculatedForce(new obj.Force2D(this._xPosition, this._yPosition, 0, this._netForceY));
             }
 
         } else if (this._fixedSupportCount == 0 && this._pinnedSupportCount == 1 && this._simpleSupportCount == 1) {
             if (this._horizontalCount == 1) {
-                this._x2Force = this._momentum/(this._support1Y-this._yPosition);
-                this._x1Force = this._netForceX + this._x2Force;
-                this._y1Force = this._netForceY;
-                outputMessage("Simple support reaction: "+this._x2Force+",vertical pinned support reaction: "+this._y1Force+" and horizontal reaction: "+this._x1Force);
-            } else if (this.verticalCount == 1) {
-                this._y2Force = this._momentum/(this.support2X-this._xPosition);
-                this._y1Force = this._netForceY + this._y2Force;
-                this._x1Force = this._netForceX;
-                outputMessage("Simple support reaction: "+this._y2Force+",vertical pinned support reaction: "+this._y1Force+" and horizontal reaction: "+this._x1Force);
+                if(this._yPosition != this._support1Y) {
+                    this._x2Force = this._momentum/(this._yPosition-this._support1Y);
+                    this._x1Force = this._netForceX - this._x2Force;
+                    this._y1Force = this._netForceY;
+                    outputMessage("Simple support reaction: "+this._x2Force+",vertical pinned support reaction: "+this._y1Force+" and horizontal reaction: "+this._x1Force);
+                    this.addCalculatedForce(new obj.Force2D(this._xPosition, this._yPosition, this._x1Force, 0));
+                    this.addCalculatedForce(new obj.Force2D(this._xPosition, this._yPosition, 0, this._y1Force));
+                    this.addCalculatedForce(new obj.Force2D(this._support1X, this._support1Y, this._x2Force, 0));
+                }
+                else{
+                    outputMessage("Impossible case!");
+                }
+                
+            } else if (this._verticalCount == 1) {
+                if(this._support2X != this._xPosition){
+                    this._y2Force = this._momentum/(this._support2X-this._xPosition);
+                    this._y1Force = this._netForceY - this._y2Force;
+                    this._x1Force = this._netForceX;
+                    outputMessage("Simple support reaction: "+this._y2Force+",vertical pinned support reaction: "+this._y1Force+" and horizontal reaction: "+this._x1Force);
+                    this.addCalculatedForce(new obj.Force2D(this._xPosition, this._yPosition, this._x1Force, 0));
+                    this.addCalculatedForce(new obj.Force2D(this._xPosition, this._yPosition, 0, this._y1Force));
+                    this.addCalculatedForce(new obj.Force2D(this._support2X, this._support2Y, 0, this._y2Force));
+                }
+                else{
+                    outputMessage("Impossible case!");
+                }
             }
 
         } else if (this._fixedSupportCount == 0 && this._pinnedSupportCount == 0 && this._simpleSupportCount ==2) {
             if (this._horizontalCount == 2){
                 if (this._netForceY != 0) {
                     outputMessage("Impossible case!");
+
                 } else {
                     this._x1Force = this._momentum/(this._yPosition-this._support1Y);
                     this._x2Force = this._netForceX - this._x1Force;
                     outputMessage("Reaction in the simple support with coordinates: x="+this._support1X+" y="+this._support1Y+": "+this._x1Force+" and reaction in the other support: "+this._x2Force);
+                    this.addCalculatedForce(new obj.Force2D(this._support1X, this._support1Y, this._x1Force, 0));
+                    this.addCalculatedForce(new obj.Force2D(this._xPosition, this._yPosition, this._x2Force, 0));
+
                 }
             } else if (this._verticalCount == 2) {
                 if(this._netForceX != 0) {
@@ -178,10 +214,15 @@ export default class Simulation {
                     this._y1Force = this._momentum/(this._support2X-this._xPosition);
                     this._y2Force = this._netForceY - this._y1Force;
                     outputMessage("Reaction in the simple support with coordinates: x="+this._support2X+" y="+this._support2Y+": "+this._y1Force+" and reaction in the other support: "+this._y2Force);
+                    this.addCalculatedForce(new obj.Force2D(this._support2X, this._support2Y, 0, this._y1Force));
+                    this.addCalculatedForce(new obj.Force2D(this._xPosition, this._yPosition, 0, this._y2Force));
+
                 }
 
             } else {
-                outputMessage("Reaction in vertical support: "+this._netForceY+" and in the horizontal support: "+this._netForceX); 
+                outputMessage("Reaction in vertical support: "+this._netForceY+" and in the horizontal support: "+this._netForceX);
+                this.addCalculatedForce(new obj.Force2D(this._support1X, this._support1Y, this._netForceX, 0));
+                this.addCalculatedForce(new obj.Force2D(this._xPosition, this._yPosition, 0, this._netForceY));
             }
 
         } else if(this._fixedSupportCount == 0 && this._pinnedSupportCount == 0 && this._simpleSupportCount ==3){
@@ -191,14 +232,15 @@ export default class Simulation {
                 this._x1Force = this._momentum/(this._yPosition-this._support1Y);
                 this._x2Force = this._netForceX - this._x1Force;
                 outputMessage("Reaction in the simple support with coordinates: x="+this._support1X+" y="+this._support1Y+": "+this._x1Force+", reaction in the other horizontal support: "+this._x2Force+" and reaction in the vertical support: "+this._y1Force);
+                
             } else if(this._verticalCount == 2){
                 this._x1Force = this._netForceX;
-                this._momentum -= this._x1Force*(this.support1Y-this._yPosition);
-                this._y1Force = this._momentum/(this.support2X-this._xPosition);
+                this._momentum -= this._x1Force*(this._yPosition-this._support1Y);
+                this._y1Force = this._momentum/(this._support2X-this._xPosition);
                 this._y2Force = this._netForceY - this._y1Force;
                 outputMessage("Reaction in the simple support with coordinates: x="+this._support2X+" y="+this._support2Y+": "+this._y1Force+", reaction in the other vertical support: "+this._y2Force+" and reaction in the horizontal support: "+this._x1Force);
             } else {
-                outputMessage("It's not possible to solve the system.")
+                outputMessage("It's not possible to solve the system.");
             }
 
         } else {

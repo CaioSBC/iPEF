@@ -177,11 +177,26 @@ export class Force2D {
         p5.stroke('#FA3D3A');
         p5.strokeWeight(4);
         let magnitude = p5.sqrt((this._magnitudeX*this._magnitudeX)+(this._magnitudeY*this._magnitudeY));
-        p5.text(magnitude.toFixed(2)+ ' N',pixelX - 1.5*pixelMagnitudeX -60,pixelY - 1.5*pixelMagnitudeY);
+        let pixelPseudoMagnitudeX=pixelMagnitudeX;
+        let pixelPseudoMagnitudeY=pixelMagnitudeY;
+        
+        if (this._magnitudeX > 20) {
+            pixelPseudoMagnitudeX = simulation.customToBaseDistX(20, "force");
+        }
+        if (this._magnitudeX < -20) {
+            pixelPseudoMagnitudeX = simulation.customToBaseDistX(-20, "force");
+        }
+        if (this._magnitudeY > 20) {
+            pixelPseudoMagnitudeY = simulation.customToBaseDistY(20, "force");
+        }
+        if (this._magnitudeY < -20) {
+            pixelPseudoMagnitudeY = simulation.customToBaseDistY(-20, "force");
+        }
+        p5.text(magnitude.toFixed(2)+ ' N',pixelX - 1.5*pixelPseudoMagnitudeX - 60,pixelY - 1.5*pixelPseudoMagnitudeY);
         p5.stroke("#F14C42");
         p5.strokeWeight(3);
         
-        let vStart = p5.createVector(pixelX - pixelMagnitudeX, pixelY - pixelMagnitudeY);
+        let vStart = p5.createVector(pixelX - pixelPseudoMagnitudeX, pixelY - pixelPseudoMagnitudeY);
         let vEnd= p5.createVector(pixelX, pixelY);
         let vResult = Vector.sub(vEnd, vStart);
 
