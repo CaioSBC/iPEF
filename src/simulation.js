@@ -91,7 +91,7 @@ export default class Simulation {
     }
 
     addCalculatedForce(object) {
-        if (object instanceof obj.Force2D) {
+        if (object instanceof obj.Force2D || object instanceof obj.Momentum) {
             this._calculatedForces.push(object);
         }
     }
@@ -148,6 +148,9 @@ export default class Simulation {
 
         if (this._fixedSupportCount == 1 && this._pinnedSupportCount == 0 && this._simpleSupportCount == 0) {
             outputMessage("Vertical Reaction: "+ this._netForceY+", Horizontal Reaction: "+ this._netForceX+", Momentum: " + this._momentum);
+            this.addCalculatedForce(new obj.Force2D(this._xPosition, this._yPosition, this._netForceX, 0));
+            this.addCalculatedForce(new obj.Force2D(this._xPosition, this._yPosition, 0, this._netForceY));
+            this.addCalculatedForce(new obj.Momentum(this._xPosition, this._yPosition, this._momentum));
             
         } else if (this._fixedSupportCount == 0 && this._pinnedSupportCount == 1 && this._simpleSupportCount ==0) {
             outputMessage("Vertical Reaction: "+ this._netForceY+" and Horizontal Reaction: " + this._netForceX);
@@ -196,7 +199,7 @@ export default class Simulation {
 
         } else if (this._fixedSupportCount == 0 && this._pinnedSupportCount == 0 && this._simpleSupportCount ==2) {
             if (this._horizontalCount == 2){
-                if (this._netForceY != 0) {
+                if (this._netForceY != 0 || this._yPosition == this._support1Y) {
                     outputMessage("Impossible case!");
 
                 } else {
@@ -208,7 +211,7 @@ export default class Simulation {
 
                 }
             } else if (this._verticalCount == 2) {
-                if(this._netForceX != 0) {
+                if(this._netForceX != 0 || this._support2X == this._xPosition) {
                     outputMessage("Impossible case!");
                 } else {
                     this._y1Force = this._momentum/(this._support2X-this._xPosition);
@@ -226,19 +229,24 @@ export default class Simulation {
             }
 
         } else if(this._fixedSupportCount == 0 && this._pinnedSupportCount == 0 && this._simpleSupportCount ==3){
-            if(this._horizontalCount == 2) {
+            if((this._horizontalCount == 2) && (this._yPosition != this._support1Y)) {
                 this._y1Force = this._netForceY;
                 this._momentum -= this._y1Force*(this._support2X-this._xPosition);
                 this._x1Force = this._momentum/(this._yPosition-this._support1Y);
                 this._x2Force = this._netForceX - this._x1Force;
                 outputMessage("Reaction in the simple support with coordinates: x="+this._support1X+" y="+this._support1Y+": "+this._x1Force+", reaction in the other horizontal support: "+this._x2Force+" and reaction in the vertical support: "+this._y1Force);
-                
-            } else if(this._verticalCount == 2){
+                this.addCalculatedForce(new obj.Force2D(this._support1X, this._support1Y, this._x1Force, 0));
+                this.addCalculatedForce(new obj.Force2D(this._xPosition, this._yPosition, 0, this._x2Force));
+                this.addCalculatedForce(new obj.Force2D(this._support2X, this._support2Y, 0, this._y1Force));
+            } else if((this._verticalCount == 2) && (this._support2X != this._xPosition)){
                 this._x1Force = this._netForceX;
                 this._momentum -= this._x1Force*(this._yPosition-this._support1Y);
                 this._y1Force = this._momentum/(this._support2X-this._xPosition);
                 this._y2Force = this._netForceY - this._y1Force;
                 outputMessage("Reaction in the simple support with coordinates: x="+this._support2X+" y="+this._support2Y+": "+this._y1Force+", reaction in the other vertical support: "+this._y2Force+" and reaction in the horizontal support: "+this._x1Force);
+                this.addCalculatedForce(new obj.Force2D(this._support1X, this._support1Y, this._x1Force, 0));
+                this.addCalculatedForce(new obj.Force2D(this._xPosition, this._yPosition, 0, this._y2Force));
+                this.addCalculatedForce(new obj.Force2D(this._support2X, this._support2Y, 0, this._y1Force));
             } else {
                 outputMessage("It's not possible to solve the system.");
             }

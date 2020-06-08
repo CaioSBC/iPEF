@@ -101,6 +101,7 @@ export class Load2D {
         p5.stroke('#3A57FA');
         p5.strokeWeight(4);
         let magnitude = p5.sqrt((this._magnitudeX*this._magnitudeX)+(this._magnitudeY*this._magnitudeY));
+        p5.fill("#2c2c2c");
         p5.text(magnitude.toFixed(2)+ 'N/m',(pixelStartX+((pixelEndX-pixelStartX)/2))-35*this._magnitudeX-50,(pixelStartY+((pixelEndY-pixelStartY)/2)) + 20*this._magnitudeY);
 
         while ((pixelStartX + deltaX) != (pixelEndX + fixDeltaX) || (pixelStartY + deltaY) != (pixelEndY + fixDeltaY)) {
@@ -137,6 +138,44 @@ export class Point {
         p5.stroke("#c1c1c1");
         p5.strokeWeight(5);
         p5.point(pixelX, pixelY);
+    }
+}
+
+export class Momentum {
+    constructor(x, y, magnitude) {
+        this._x = x;
+        this._y = y;
+        this._magnitude = magnitude;
+    }
+
+    get x() {
+        return this._x;
+    }
+
+    get y() {
+        return this._y;
+    }
+
+    draw(p5, simulation) {
+        let pixelX = simulation.customToBaseX(this._x);
+        let pixelY = simulation.customToBaseY(this._y);
+        
+        p5.stroke("#F9F155");
+        p5.strokeWeight(3);
+        p5.noFill();
+        if (this._magnitude > 0) {
+            p5.arc(pixelX, pixelY, 40, 40, -p5.HALF_PI,p5.HALF_PI, p5.OPEN);
+            p5.fill("#F9F155");
+            p5.triangle(pixelX,pixelY-23.5,pixelX,pixelY-16.5,pixelX-3.5,pixelY-20);
+            p5.fill("#2c2c2c");
+            p5.text(Math.abs(this._magnitude)+'N.m',pixelX+20,pixelY-20);
+        } else if (this._magnitude < 0) {
+            p5.arc(pixelX, pixelY, 40, 40, p5.HALF_PI, p5.PI + p5.HALF_PI, p5.OPEN);
+            p5.fill("#F9F155");
+            p5.triangle(pixelX,pixelY-23.5,pixelX,pixelY-16.5,pixelX+3.5,pixelY-20);
+            p5.fill("#2c2c2c");
+            p5.text(Math.abs(this._magnitude)+' N.m',pixelX+20,pixelY-20);
+        }
     }
 }
 
@@ -192,6 +231,8 @@ export class Force2D {
         if (this._magnitudeY < -20) {
             pixelPseudoMagnitudeY = simulation.customToBaseDistY(-20, "force");
         }
+
+        p5.fill("#2c2c2c");
         p5.text(magnitude.toFixed(2)+ ' N',pixelX - 1.5*pixelPseudoMagnitudeX - 60,pixelY - 1.5*pixelPseudoMagnitudeY);
         p5.stroke("#F14C42");
         p5.strokeWeight(3);
@@ -232,22 +273,22 @@ export class SimpleSupport {
 
         switch(this._direction) {
             case "esquerda":
-                p5.fill("#2c2c2c");
+                p5.noFill();
                 p5.triangle(pixelX, pixelY, pixelX + 20, pixelY + 20, pixelX + 20, pixelY - 20);
                 p5.line(pixelX + 30, pixelY + 20, pixelX + 30, pixelY - 20);
                 break;
             case "direita":
-                p5.fill("#2c2c2c");
+                p5.noFill();
                 p5.triangle(pixelX, pixelY, pixelX - 20, pixelY + 20, pixelX - 20, pixelY  - 20);
                 p5.line(pixelX - 30, pixelY + 20, pixelX - 30, pixelY - 20);
                 break;
             case "cima":
-                p5.fill("#2c2c2c");
+                p5.noFill();
                 p5.triangle(pixelX, pixelY, pixelX + 20, pixelY + 20, pixelX - 20, pixelY + 20);
                 p5.line(pixelX + 20, pixelY + 30, pixelX - 20, pixelY + 30);
                 break;
             case "baixo":
-                p5.fill("#2c2c2c");
+                p5.noFill();
                 p5.triangle(pixelX, pixelY, pixelX + 20, pixelY - 20, pixelX - 20, pixelY - 20);
                 p5.line(pixelX + 20, pixelY - 30, pixelX - 20, pixelY - 30);
                 break;
@@ -285,19 +326,19 @@ export class PinnedSupport {
 
         switch(this._direction) {
             case "esquerda":
-                p5.fill("#2c2c2c");
+                p5.noFill();
                 p5.triangle(pixelX, pixelY, pixelX + 20, pixelY + 20, pixelX + 20, pixelY - 20);
                 break;
             case "direita":
-                p5.fill("#2c2c2c");
+                p5.noFill();
                 p5.triangle(pixelX, pixelY, pixelX - 20, pixelY + 20, pixelX - 20, pixelY  - 20);
                 break;
             case "cima":
-                p5.fill("#2c2c2c");
+                p5.noFill();
                 p5.triangle(pixelX, pixelY, pixelX + 20, pixelY + 20, pixelX - 20, pixelY + 20);
                 break;
             case "baixo":
-                p5.fill("#2c2c2c");
+                p5.noFill();
                 p5.triangle(pixelX, pixelY, pixelX + 20, pixelY - 20, pixelX - 20, pixelY - 20);
                 break;
             default:
